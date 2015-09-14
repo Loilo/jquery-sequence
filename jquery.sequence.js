@@ -104,8 +104,6 @@ $.fn.sequence = function( callback, interval, instantly ) {
 			.removeData( "sequence-queued" )
 			.removeData( "sequence-done" );
 
-
-		console.log('clean up in here');
 		if ( successful )
 			promise.resolve( obj );
 		else
