@@ -61,6 +61,7 @@
 		margin: 0.25em;
 	}
 	.button.off {
+		cursor: default;
 		opacity: 0.6;
 	}
 	.console, .controller {
@@ -89,22 +90,38 @@
 	}
 	</style>
 	<script>
-	var seq1release, seq2release;
+	var $el, seq1release, seq2release;
 	function buttons () {
 		$('.controller').append('<h3>Sequence 1</h3>');
 		seq1release = btn('Release', function () {
-			seq1.reset();
 			seq1.release();
-			demoConsole.add("seq1.reset();\nseq1.release();");
+			demoConsole.add("seq1.release();");
 		});
+
+		btn('Reset', function () {
+			seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
+			seq1.always(function () { seq1release.addClass('off'); });
+			seq1release.removeClass('off');
+			demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
+    $( this ).css( \"background-color\", \"#aaa\", false );\n\
+}, 100 );");
+		});
+
 
 		$('.controller').append('<h3>Sequence 2</h3>');
 		seq2release = btn('Release', function () {
-			seq2.reset();
 			seq2.release();
-			demoConsole.add("seq2.reset();\nseq2.release();");
+			demoConsole.add("seq2.release();");
 		});
 
+		btn('Reset', function () {
+			seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
+			seq2.always(function () { seq1release.addClass('off'); });
+			seq2release.removeClass('off');
+			demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
+    $( this ).css( \"background-color\", \"#ccc\" );\n\
+}, 100, false );");
+		});
 	}
 
 	var demoConsole = {
@@ -147,7 +164,7 @@
 	var seq1, seq1;
 	$(document).ready(function () {
 		buttons();
-		var $el = reset();
+		$el = reset();
 		seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
 		seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
 		seq1.always(function () { seq1release.addClass('off'); });
