@@ -21,7 +21,8 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 
 	var reset = function () {
-		obj = {};
+		delete obj.promise;
+
 		promise = $.Deferred();
 		index = 0;
 		done = false;
@@ -103,6 +104,8 @@ $.fn.sequence = function( callback, interval, instantly ) {
 			.removeData( "sequence-queued" )
 			.removeData( "sequence-done" );
 
+
+		console.log('clean up in here');
 		if ( successful )
 			promise.resolve();
 		else
