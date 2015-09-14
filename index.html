@@ -95,21 +95,20 @@
 	function buttons () {
 		$('.controller').append('<h3>Sequence 1</h3>');
 		seq1release = btn('Release', function () {
-			seq1.reset();
 			seq1.release();
-			demoConsole.add("seq1.reset();\nseq1.release();");
+			demoConsole.add("seq1.release();");
 		});
 
 		btn('Reset', function () {
 			seq1.reset();
 			seq1.promise.always(function () { seq1release.addClass('off'); });
 			seq1release.removeClass('off');
+			demoConsole.add("seq1.reset();");
 		});
 
 
 		$('.controller').append('<h3>Sequence 2</h3>');
 		seq2release = btn('Release', function () {
-			console.log(seq2);
 			seq2.release();
 			demoConsole.add("seq2.release();");
 		});
@@ -118,6 +117,7 @@
 			seq2.reset();
 			seq2.promise.always(function () { seq2release.addClass('off'); });
 			seq2release.removeClass('off');
+			demoConsole.add("seq2.reset();");
 		});
 	}
 
