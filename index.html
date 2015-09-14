@@ -37,11 +37,16 @@
 		margin: 0;
 		padding: 1em 0;
 	}
+	h3 {
+		margin: 0;
+		margin-top: 30px;
+		padding: 0 0 20px;
+	}
 	pre {
 		text-align: left;
 	}
 	.controller {
-		padding: 2em;
+		padding: 0 2em;
 		box-sizing: border-box;
 	}
 	.button {
@@ -85,125 +90,20 @@
 	</style>
 	<script>
 	function buttons () {
+		$('.controller').append('<h3>Sequence 1</h3>');
 		btn('Release', function () {
-			$(this).removeClass('pulse');
-			counter++;
-			var inner = counter;
-			var outer = nrWord(inner);
-
-			var c = Circle.create().innerLabel(inner).outerLabel('number ' + outer);
-			circs[inner] = c;
-			arc.add(c);
-			demoConsole.add("seq1.\n\
-	.create()\n\
-	.innerLabel('" + inner + "')\n\
-	.outerLabel('number " + outer + "');\n\
-\n\
-arc.add(circle" + inner + ");");
+			seq1.reset();
+			seq1.release();
+			demoConsole.add("seq1.reset();\nseq1.release();");
 		});
 
-		btn('Remove circle', function () {
-			var rm = prompt('Number?');
-			if (circs[rm]) {
-				arc.remove(circs[rm]);
-				demoConsole.add("arc.remove(circle" + rm + ");");
-			} else {
-				demoConsole.add("// there is no circle with the number '" + rm + "'");
-			}
+		$('.controller').append('<h3>Sequence 2</h3>');
+		btn('Release', function () {
+			seq2.reset();
+			seq2.release();
+			demoConsole.add("seq2.reset();\nseq2.release();");
 		});
 
-		btn('Reverse', function () {
-			arc.reverse();
-			demoConsole.add("arc.reverse();");
-		});
-
-		btn();
-
-
-		btn('Collapse', function () {
-			arc.collapse();
-			demoConsole.add("arc.collapse();");
-		});
-
-		btn('Expand', function () {
-			arc.expand();
-			demoConsole.add("arc.expand();");
-		});
-
-		btn();
-
-
-
-		btn('Change arc angle', function () {
-			var deg = prompt('Degrees', arc.getOption('degrees'));
-			if (deg === null) return;
-			if (isNaN(deg*1) || (deg*1) < 0 || parseInt(deg) !== parseFloat(deg)) {
-				demoConsole.add("// Please enter an integer greater than 0.");
-			} else {
-				arc.setOption('degrees', deg*1).arrangeAll();
-				demoConsole.add("arc.setOption('degrees', '" + deg + "').arrangeAll();");
-			}
-		});
-
-		btn('Change "root" angle', function () {
-			var deg = prompt('Degrees', arc.getOption('offset'));
-			if (deg === null) return;
-			if (isNaN(deg*1) || parseInt(deg) !== parseFloat(deg)) {
-				demoConsole.add("// Please enter an integer.");
-			} else {
-				arc.setOption('offset', deg*1).arrangeAll();
-				demoConsole.add("arc.setOption('offset', " + deg + ").arrangeAll();");
-			}
-		});
-
-		btn('Change radius', function () {
-			var deg = prompt('Degrees', arc.getOption('radius')[0]);
-			if (deg === null) return;
-			if (isNaN(deg*1) || (deg*1 < 0) || parseInt(deg) !== parseFloat(deg)) {
-				demoConsole.add("// Please enter an integer.");
-			} else {
-				arc.setOption('radius', [deg*1, 'px']).arrangeAll();
-				demoConsole.add("arc.setOption('radius', [" + deg + ", 'px']).arrangeAll();");
-			}
-		});
-
-		btn('Use last slot', function () {
-			var turnOn = $(this).hasClass('off');
-			arc.setOption('fillLast', turnOn).arrangeAll();
-			if (turnOn) {
-				$(this).removeClass('off');
-				demoConsole.add("arc.setOption('fillLast', true).arrangeAll();");
-			} else {
-				$(this).addClass('off');
-				demoConsole.add("arc.setOption('fillLast', false).arrangeAll();");
-			}
-		});
-
-		btn();
-
-		var alFirst = btn('Align first', function () {
-			alCenter.add(alLast).addClass('off');
-			alFirst.removeClass('off');
-
-			arc.setOption('align', 'first').arrangeAll();
-			demoConsole.add("arc.setOption('align', 'first').arrangeAll();");
-		}).addClass('off');
-
-		var alCenter = btn('Align center', function () {
-			alFirst.add(alLast).addClass('off');
-			alCenter.removeClass('off');
-
-			arc.setOption('align', 'center').arrangeAll();
-			demoConsole.add("arc.setOption('align', 'center').arrangeAll();");
-		});
-
-		var alLast = btn('Align last', function () {
-			alCenter.add(alFirst).addClass('off');
-			alLast.removeClass('off');
-
-			arc.setOption('align', 'last').arrangeAll();
-			demoConsole.add("arc.setOption('align', 'last').arrangeAll();");
-		}).addClass('off');
 	}
 
 	var demoConsole = {
