@@ -103,7 +103,10 @@
 			seq1.reset();
 			seq1.promise.always(function () { seq1release.addClass('off'); });
 			seq1release.removeClass('off');
-			demoConsole.add("seq1.reset();");
+			demoConsole.add("seq1.reset();\n\
+seq1.promise.always(function () {\n\
+	seq1.reset();\n\
+});");
 		});
 
 
@@ -117,7 +120,10 @@
 			seq2.reset();
 			seq2.promise.always(function () { seq2release.addClass('off'); });
 			seq2release.removeClass('off');
-			demoConsole.add("seq2.reset();");
+			demoConsole.add("seq2.reset();\n\
+seq2.promise.always(function () {\n\
+	seq2.reset();\n\
+});");
 		});
 	}
 
@@ -171,8 +177,15 @@
 		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
     $( this ).css( \"background-color\", \"#aaa\" );\n\
 }, 100 );");
-		demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
+		demoConsole.add("var seq2 = $( \".box\" )\n\
+.sequence( function() {\n\
     $( this ).css( \"background-color\", \"#ccc\" );\n\
+}, 100, false )\n\
+.always( function( ctrl ) {\n\
+	ctrl.reset();\n\
+    ctrl.always( function( ctrl ) {\n\
+		ctrl.reset();\n\
+    } );\n\
 }, 100, false );");
 	});
 	</script>
