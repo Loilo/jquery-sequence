@@ -46,3 +46,6 @@ The promise will be resolved.
 
 ### .clear()
 Puts the execution on hold and clears the sequence queue. The promise will be rejected.
+
+### .reset()
+Resets the sequence and removes all promise handlers. Be aware that the changes made by the previous sequence calls naturally can't be reverted by this.
