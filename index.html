@@ -99,31 +99,11 @@
 			demoConsole.add("seq1.release();");
 		});
 
-		btn('Reset', function () {
-			seq1.reset();
-			seq1.promise.always(function () { seq1release.addClass('off'); });
-			seq1release.removeClass('off');
-			demoConsole.add("seq1.reset();\n\
-seq1.promise.always(function () {\n\
-	seq1.reset();\n\
-});");
-		});
-
 
 		$('.controller').append('<h3>Sequence 2</h3>');
 		seq2release = btn('Release', function () {
 			seq2.release();
 			demoConsole.add("seq2.release();");
-		});
-
-		btn('Reset', function () {
-			seq2.reset();
-			seq2.promise.always(function () { seq2release.addClass('off'); });
-			seq2release.removeClass('off');
-			demoConsole.add("seq2.reset();\n\
-seq2.promise.always(function () {\n\
-	seq2.reset();\n\
-});");
 		});
 	}
 
@@ -170,22 +150,24 @@ seq2.promise.always(function () {\n\
 		$el = reset();
 		seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
 		seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
-		seq1.promise.always(function () { seq1release.addClass('off'); });
-		seq2.promise.always(function () { seq2release.addClass('off'); });
+		var resetSeq = function (seq) {
+			seq.reset();
+			seq.promise.always(function () {
+				console.log('finished');
+				resetSeq(seq);
+			});
+		};
+		resetSeq(seq1);
+		resetSeq(seq2);
 
 		demoConsole.add('// Appended 21 &lt;div class="box"&gt; containers');
-		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#aaa\" );\n\
-}, 100 );");
+		demoConsole.add("var seq1 = $( \".box\" )\n\
+.sequence( function() {\n\
+    $( this ).css( \"background-color\", \"#ccc\" );\n\
+}, 100, false );");
 		demoConsole.add("var seq2 = $( \".box\" )\n\
 .sequence( function() {\n\
     $( this ).css( \"background-color\", \"#ccc\" );\n\
-}, 100, false )\n\
-.always( function( ctrl ) {\n\
-	ctrl.reset();\n\
-    ctrl.always( function( ctrl ) {\n\
-		ctrl.reset();\n\
-    } );\n\
 }, 100, false );");
 	});
 	</script>
