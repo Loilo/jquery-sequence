@@ -8,7 +8,6 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		$elements = this,
 
 		promise = $.Deferred(),
-		methods = {},
 
 		settings = {
 			paused: !instantly,
@@ -19,29 +18,13 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		currentRunTimestamp = 0,
 		remainingDelay = 0;
 
-	var reset = function () {
-		done = false;
-		index = 0;
-		promise = $.Deferred();
-
-		// really dirty, I know
-		for ( var name in methods ) {
-			promise[ name ] = methods[ name ];
-		}
-		methods = {};
-
-		$elements
-			.data( "sequence-queued", true )
-			.data( "sequence-done", false );
-	};
-
 
 	// modify promise object
 	// get / set interval
-	methods.getInterval = function() {
+	promise.getInterval = function() {
 		return settings.interval;
 	};
-	methods.setInterval = function( interval ) {
+	promise.setInterval = function( interval ) {
 		if ( done ) return;
 
 		settings.interval = interval;
@@ -49,14 +32,14 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 
 	// hold / release
-	methods.hold = function() {
+	promise.hold = function() {
 		if ( done ) return;
 
 		remainingDelay = 1 - ( ( Date.now() - currentRunTimestamp ) / settings.interval );
 		clearTimeout( currentRunTimeout );
 		settings.paused = true;
 	};
-	methods.release = function( when ) {
+	promise.release = function( when ) {
 		if ( done ) return;
 		if ( typeof when === "undefined" ) when = "now";
 
@@ -66,7 +49,7 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 
 	// run all at once
-	methods.runAll = function() {
+	promise.runAll = function() {
 		if ( done ) return;
 
 		promise.hold();
@@ -85,20 +68,12 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 
 	// stop the sequence and 
-	methods.clear = function() {
+	promise.clear = function() {
 		if ( done ) return;
 
 		promise.hold();
 		tidyUp( false );
 	};
-
-	// resets the sequence
-	methods.reset = function() {
-		reset();
-	};
-
-
-	reset();
 
 
 	// clean up in here and handle our promise
