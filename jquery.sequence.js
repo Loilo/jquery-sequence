@@ -153,7 +153,7 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		} );
 	}
 
-	return promise;
+	return obj;
 };
 
 } )( jQuery );
