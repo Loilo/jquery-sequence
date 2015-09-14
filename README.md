@@ -30,22 +30,22 @@ You can run the familiar jQuery promise-like methods on the controller to determ
 
 Additionally, there are the following methods appended:
 
-### .hold()
+### `.hold()`
 Pauses the execution of the sequence instantly.
 
-### .release( [ when = "now" ] )
+### `.release( [ when = "now" ] )`
 Unpauses the execution of the sequence.
 The `when` parameter can either be
 - `"now"` to execute the next call on the sequence immediately (default)
 - `"delayed"` to wait a full turn and then run the callback or
 - `"remaining"` to resume exactly at the point where the execution was put on hold.
 
-### .runAll()
+### `.runAll()`
 Runs all remaining calls immediately.
 The promise will be resolved.
 
-### .clear()
+### `.clear()`
 Puts the execution on hold and clears the sequence queue. The promise will be rejected.
 
-### .reset()
+### `.reset()`
 Resets the sequence and removes all promise handlers. Be aware that the changes made by the previous sequence calls naturally can't be reverted by this.
