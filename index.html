@@ -89,16 +89,17 @@
 	}
 	</style>
 	<script>
+	var seq1release, seq2release;
 	function buttons () {
 		$('.controller').append('<h3>Sequence 1</h3>');
-		btn('Release', function () {
+		seq1release = btn('Release', function () {
 			seq1.reset();
 			seq1.release();
 			demoConsole.add("seq1.reset();\nseq1.release();");
 		});
 
 		$('.controller').append('<h3>Sequence 2</h3>');
-		btn('Release', function () {
+		seq2release = btn('Release', function () {
 			seq2.reset();
 			seq2.release();
 			demoConsole.add("seq2.reset();\nseq2.release();");
@@ -127,7 +128,7 @@
 		return $('<button>')
 			.html(lbl)
 			.addClass('button')
-			.click(cb)
+			.click(function () { if($(this).hasClass('off')) return; cb.apply(this); })
 			.appendTo('.controller');
 				
 	};
@@ -148,14 +149,16 @@
 		buttons();
 		var $el = reset();
 		seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
-		seq2 = $el.sequence(function () { $(this).css('background-color', '#999'); }, 100, false);
+		seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
+		seq1.always(function () { seq1release.addClass('off'); });
+		seq2.always(function () { seq2release.addClass('off'); });
 
 		demoConsole.add('// Appended 25 &lt;div class="box"&gt; containers');
 		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
     $( this ).css( \"background-color\", \"#aaa\" );\n\
 }, 100 );");
 		demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#999\" );\n\
+    $( this ).css( \"background-color\", \"#ccc\" );\n\
 }, 100, false );");
 	});
 	</script>
