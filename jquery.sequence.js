@@ -32,7 +32,10 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 	obj.promise = promise;
 
-	obj.reset = reset;
+	obj.reset = function () {
+		obj.hold();
+		reset();
+	}
 
 	// get / set interval
 	obj.getInterval = function() {
