@@ -28,6 +28,7 @@
 	}
 	.inner-container {
 		max-width: 450px;
+		max-width: 630px;
 		margin: auto;
 	}
 	
@@ -100,28 +101,23 @@
 		});
 
 		btn('Reset', function () {
-			seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
+			seq1.reset();
 			seq1.always(function () { seq1release.addClass('off'); });
 			seq1release.removeClass('off');
-			demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#aaa\", false );\n\
-}, 100 );");
 		});
 
 
 		$('.controller').append('<h3>Sequence 2</h3>');
 		seq2release = btn('Release', function () {
+			console.log(seq2);
 			seq2.release();
 			demoConsole.add("seq2.release();");
 		});
 
 		btn('Reset', function () {
-			seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
-			seq2.always(function () { seq1release.addClass('off'); });
+			seq2.reset();
+			seq2.always(function () { seq2release.addClass('off'); });
 			seq2release.removeClass('off');
-			demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#ccc\" );\n\
-}, 100, false );");
 		});
 	}
 
@@ -155,14 +151,14 @@
 		var $container = $('.inner-container');
 		$container.empty();
 
-		for (var i = 1; i <= 25; i++) {
+		for (var i = 1; i <= 21; i++) {
 			$container.append('<div class="box"></div>');
 		}
 
 		return $container.children();
 	};
 
-	var seq1, seq1;
+	var seq1, seq2;
 	$(document).ready(function () {
 		buttons();
 		$el = reset();
@@ -171,7 +167,7 @@
 		seq1.always(function () { seq1release.addClass('off'); });
 		seq2.always(function () { seq2release.addClass('off'); });
 
-		demoConsole.add('// Appended 25 &lt;div class="box"&gt; containers');
+		demoConsole.add('// Appended 21 &lt;div class="box"&gt; containers');
 		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
     $( this ).css( \"background-color\", \"#aaa\" );\n\
 }, 100 );");
