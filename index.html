@@ -94,8 +94,9 @@
 	function buttons () {
 		$('.controller').append('<h3>Sequence 1</h3>');
 		seq1release = btn('Release', function () {
+			seq1.reset();
 			seq1.release();
-			demoConsole.add("seq1.release();");
+			demoConsole.add("seq1.reset();\nseq1.release();");
 		});
 
 		btn('Reset', function () {
