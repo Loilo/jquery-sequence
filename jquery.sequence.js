@@ -28,71 +28,71 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		currentRunTimeout = null;
 		currentRunTimestamp = 0;
 		remainingDelay = 0;
-	};
 
-	obj.promise = promise;
+		obj.promise = promise;
 
-	obj.reset = function () {
-		obj.hold();
-		reset();
-	}
-
-	// get / set interval
-	obj.getInterval = function() {
-		return settings.interval;
-	};
-	obj.setInterval = function( interval ) {
-		if ( done ) return;
-
-		settings.interval = interval;
-	};
-
-
-	// hold / release
-	obj.hold = function() {
-		if ( done ) return;
-
-		remainingDelay = 1 - ( ( Date.now() - currentRunTimestamp ) / settings.interval );
-		clearTimeout( currentRunTimeout );
-		settings.paused = true;
-	};
-	obj.release = function( when ) {
-		if ( done ) return;
-		if ( typeof when === "undefined" ) when = "now";
-
-		settings.paused = false;
-		chain( when );
-	};
-
-
-	// run all at once
-	obj.runAll = function() {
-		if ( done ) return;
-
-		obj.hold();
-
-		var i = index,
-			element;
-
-		while ( element = $elements.get( i ) ) {
-			callback.apply( element );
-			$( element ).data( "sequence-done" , true );
-			i++;
+		obj.reset = function () {
+			obj.hold();
+			reset();
 		}
 
-		tidyUp( true );
+		// get / set interval
+		obj.getInterval = function() {
+			return settings.interval;
+		};
+		obj.setInterval = function( interval ) {
+			if ( done ) return;
+
+			settings.interval = interval;
+		};
+
+
+		// hold / release
+		obj.hold = function() {
+			if ( done ) return;
+
+			remainingDelay = 1 - ( ( Date.now() - currentRunTimestamp ) / settings.interval );
+			clearTimeout( currentRunTimeout );
+			settings.paused = true;
+		};
+		obj.release = function( when ) {
+			if ( done ) return;
+			if ( typeof when === "undefined" ) when = "now";
+
+			settings.paused = false;
+			chain( when );
+		};
+
+
+		// run all at once
+		obj.runAll = function() {
+			if ( done ) return;
+
+			obj.hold();
+
+			var i = index,
+				element;
+
+			while ( element = $elements.get( i ) ) {
+				callback.apply( element );
+				$( element ).data( "sequence-done" , true );
+				i++;
+			}
+
+			tidyUp( true );
+		};
+
+
+		// stop the sequence and 
+		obj.clear = function() {
+			if ( done ) return;
+
+			obj.hold();
+			tidyUp( false );
+		};
 	};
 
-
-	// stop the sequence and 
-	obj.clear = function() {
-		if ( done ) return;
-
-		obj.hold();
-		tidyUp( false );
-	};
-
-
+	reset();
 
 
 	// clean up in here and handle our promise
