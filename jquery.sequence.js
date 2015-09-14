@@ -107,9 +107,9 @@ $.fn.sequence = function( callback, interval, instantly ) {
 
 		console.log('clean up in here');
 		if ( successful )
-			promise.resolve();
+			promise.resolve( obj );
 		else
-			promise.reject();
+			promise.reject( obj );
 
 		done = true;
 	};
