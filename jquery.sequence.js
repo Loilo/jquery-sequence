@@ -23,16 +23,16 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		done = false;
 		index = 0;
 		promise = $.Deferred();
-		methods = {};
-
-		$elements
-			.data( "sequence-queued", true )
-			.data( "sequence-done", false );
 
 		// really dirty, I know
 		for ( var name in methods ) {
 			promise[ name ] = methods[ name ];
 		}
+		methods = {};
+
+		$elements
+			.data( "sequence-queued", true )
+			.data( "sequence-done", false );
 	};
 
 
