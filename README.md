@@ -25,7 +25,7 @@ An optional boolean, defaulting to `true`. Tells if the sequence should run as i
 
 
 ## Control the sequence
-`.sequence()` returns a sequence controller object (called `ctrl` below).
+Calling `.sequence( [...] )` returns a sequence controller object (called `ctrl` below).
 It contains a `$.Deferred()` promise as the `ctrl.promise` property, so you can run the familiar jQuery promise-like methods to determine when the sequence finishes.
 
 Additionally, there are the following methods appended:
