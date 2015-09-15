@@ -8,6 +8,43 @@
 	<script type="text/javascript" src="jquery.sequence.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="prism.css">
 	<style type="text/css">
+	@keyframes pulse {
+		0% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+	@-webkit-keyframes pulse {
+		0% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+	.pulse {
+		background-color: #bf3131 !important;
+		animation: 2s pulse infinite;
+		-webkit-animation: 2s pulse infinite;
+	}
+	.delete {
+		background-color: #bf3131 !important;
+		font-size: 0.75em !important;
+		margin-left: 0.75em !important;
+		font-weight: 300 !important;
+		padding: 0.2em 0.4em !important;
+		position: relative;
+		top: -0.15em;
+	}
+
 	html, body {
 		margin: 0;
 		padding: 0;
@@ -24,6 +61,7 @@
 	
 	.container {
 		background-color: #eee;
+		margin-top: 2em;
 		position: relative;
 	}
 	.inner-container {
@@ -40,14 +78,34 @@
 	}
 	h3 {
 		margin: 0;
-		margin-top: 30px;
+		margin-top: 2em;
 		padding: 0 0 20px;
 	}
-	pre {
+	.seq > span {
+		content: "";
+		display: inline-block;
+		/*width: 0.8em;*/
+		/*height: 0.8em;*/
+		border: 1px solid #888;
+		border-radius: 4px;
+		margin-right: 0.5em;
+		padding: 0.3em 0.2em 0em;
+		font-size: 0.8em;
+		vertical-align: top;
+		font-family: Consolas, monospace;
+		font-weight: normal;
+	}
+/*	.seq1:before {
+		background-color: #aaa;
+	}
+	.seq2:before {
+		background-color: #ccc;
+	}
+*/	pre {
 		text-align: left;
 	}
 	.controller {
-		padding: 0 2em;
+		padding: 2em;
 		box-sizing: border-box;
 	}
 	a {
@@ -95,15 +153,116 @@
 	}
 	</style>
 	<script>
-	var $el, seq1release, seq2release;
+	var $el, seq1release, seq2release, seqButtons = [];
+
+
+	var resetSeq = function (seq, btn) {
+		seq.reset();
+		btn.removeClass('off');
+		seq.promise.always(function () {
+			setTimeout(function () {
+				resetSeq(seq, btn);
+			});
+		});
+	};
+
+	var luma = function(c) {
+	  var b, g, l, r, rgb;
+	  c = c.substring(1);
+	  if (c.length === 3) {
+	    c = c.charAt(0) + c.charAt(0) + c.charAt(1) + c.charAt(1) + c.charAt(2) + c.charAt(2);
+	  }
+	  rgb = parseInt(c, 16);
+	  r = (rgb >> 16) & 0xff;
+	  g = (rgb >> 8) & 0xff;
+	  b = (rgb >> 0) & 0xff;
+	  l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+	  return l;
+	};
+
+
+	var i = 1;
+	function createSequence(c) {
+		var index = i;
+		var color = c;
+		i++;
+
+		var ctrl = $el.sequence(function () {
+			$(this).css('background-color', color);
+		}, 100, false);
+		
+		demoConsole.add("var seq" + index + " = $( \".box\" ).sequence( function() {\n\
+    $( this ).css( \"background-color\", \"" + color + "\" );\n\
+}, 100, false );");
+
+		var $color = $('<span>').html(color);
+		var $time = $('<span>').html('100ms');
+		var $status = $('<span style="background-color:' + color + ';color:' + (luma(color) >= 128 ? 'black' : 'white') + '">')
+			.append([
+				$color,
+				', ',
+				$time
+			]);
+
+		var $title = $('<h3 class="seq">Sequence ' + index + '</h3>');
+		$title.prepend([$status, ' ']);
+		if (index !== 1 || true) {
+			var $remove = btn('Remove', function () {
+				$title.nextUntil('h3').andSelf().remove();
+			});
+			$remove.addClass('delete');
+			$title.append($remove);
+		}
+
+		$('.controller').append($title);
+
+		seqButtons[index] = btn('Run', function () {
+			ctrl.release("remaining");
+			seqButtons[index].addClass('off');
+			seqButtons[index].removeClass('pulse');
+			demoConsole.add("seq" + index + ".release( \"remaining\" );");
+		});
+
+		resetSeq(ctrl, seqButtons[index]);
+
+		if (index === 1) seqButtons[index].addClass('pulse');
+		btn('Pause', function () {
+			seqButtons[index].removeClass('off');
+			ctrl.hold();
+			demoConsole.add("seq" + index + ".hold();");
+		});
+		btn('Speed down', function () {
+			var newInterval = ctrl.getInterval() * 2;
+			ctrl.setInterval( newInterval );
+			$time.html(newInterval + 'ms');
+			demoConsole.add("seq" + index + ".setInterval( " + newInterval + " );");
+		});
+		btn('Speed up', function () {
+			var newInterval = ctrl.getInterval() / 2;
+			ctrl.setInterval( newInterval );
+			$time.html(newInterval + 'ms');
+			demoConsole.add("seq" + index + ".setInterval( " + newInterval + " );");
+		});
+		btn('Run all', function () {
+			ctrl.runAll();
+			demoConsole.add("seq" + index + ".runAll();");
+		});
+		btn('Reset', function () {
+			resetSeq(ctrl, seqButtons[index]);
+			demoConsole.add("seq" + index + ".reset();");
+		});
+	}
+
 	function buttons () {
-		$('.controller').append('<h3>Sequence 1</h3>');
-		seq1release = btn('Release', function () {
+		$('.controller').append('<h3 class="seq seq1">Sequence 1</h3>');
+		seq1release = btn('Run', function () {
 			seq1.release("remaining");
 			seq1release.addClass('off');
+			seq1release.removeClass('pulse');
 			demoConsole.add("seq1.release( \"remaining\" );");
 		});
-		btn('Hold', function () {
+		seq1release.addClass('pulse');
+		btn('Pause', function () {
 			seq1release.removeClass('off');
 			seq1.hold();
 			demoConsole.add("seq1.hold();");
@@ -128,13 +287,13 @@
 		});
 
 
-		$('.controller').append('<h3>Sequence 2</h3>');
-		seq2release = btn('Release', function () {
+		$('.controller').append('<h3 class="seq seq2">Sequence 2</h3>');
+		seq2release = btn('Run', function () {
 			seq2.release("remaining");
 			seq2release.addClass('off');
 			demoConsole.add("seq2.release( \"remaining\" );");
 		});
-		btn('Hold', function () {
+		btn('Pause', function () {
 			seq2release.removeClass('off');
 			seq2.hold();
 			demoConsole.add("seq2.hold();");
@@ -198,29 +357,31 @@
 
 	var seq1, seq2;
 	$(document).ready(function () {
-		buttons();
-		$el = reset();
-		seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
-		seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
-		var resetSeq = function (seq, btn) {
-			seq.reset();
-			btn.removeClass('off');
-			seq.promise.always(function () {
-				setTimeout(function () {
-					resetSeq(seq, btn);
-				});
-			});
-		};
-		resetSeq(seq1, seq1release);
-		resetSeq(seq2, seq2release);
-
+		var add = btn('Add sequence', function () {
+			var color = prompt('Color', '#aaa');
+			if (color === null || color.length === 0) return;
+			createSequence(color);
+		});
 		demoConsole.add('// Appended 50 &lt;div class="box"&gt; containers');
-		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#ccc\" );\n\
-}, 100, false );");
-		demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
-    $( this ).css( \"background-color\", \"#ccc\" );\n\
-}, 100, false );");
+		$el = reset();
+		createSequence('#fff');
+
+
+		// buttons();
+		// $el = reset();
+		// seq1 = $el.sequence(function () { $(this).css('background-color', '#aaa'); }, 100);
+		// seq2 = $el.sequence(function () { $(this).css('background-color', '#ccc'); }, 100, false);
+
+		// resetSeq(seq1, seq1release);
+		// resetSeq(seq2, seq2release);
+
+		
+// 		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
+//     $( this ).css( \"background-color\", \"#ccc\" );\n\
+// }, 100, false );");
+// 		demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
+//     $( this ).css( \"background-color\", \"#ccc\" );\n\
+// }, 100, false );");
 	});
 	</script>
 </head>
