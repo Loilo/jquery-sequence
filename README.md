@@ -9,6 +9,8 @@ $( ".selector" ).sequence( callback, 500 );
 
 This will apply your `callback` function on each element of the collection with a delay of 500ms between each call.
 
+You can find a small interactive playground [here](http://loilo.github.io/jquery-sequence/).
+
 # Usage
 
 ## Get started
