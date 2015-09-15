@@ -25,27 +25,27 @@ An optional boolean, defaulting to `true`. Tells if the sequence should run as i
 
 
 ## Control the sequence
-`.sequence()` returns a sequence controller object which is basically a `jQuery.Deferred()` loaded with some extra methods.
-You can run the familiar jQuery promise-like methods on the controller to determine when the sequence finishes.
+`.sequence()` returns a sequence controller object (called `ctrl` below).
+It contains a `$.Deferred()` promise as the `ctrl.promise` property, so you can run the familiar jQuery promise-like methods to determine when the sequence finishes.
 
 Additionally, there are the following methods appended:
 
-### `.hold()`
+`ctrl.hold()`
 Pauses the execution of the sequence instantly.
 
-### `.release( [ when = "now" ] )`
+`ctrl.release( [ when = "now" ] )`
 Unpauses the execution of the sequence.
 The `when` parameter can either be
 - `"now"` to execute the next call on the sequence immediately (default)
 - `"delayed"` to wait a full turn and then run the callback or
 - `"remaining"` to resume exactly at the point where the execution was put on hold.
 
-### `.runAll()`
+`ctrl.runAll()`
 Runs all remaining calls immediately.
 The promise will be resolved.
 
-### `.clear()`
+`ctrl.cancel()`
 Puts the execution on hold and clears the sequence queue. The promise will be rejected.
 
-### `.reset()`
+`ctrl.reset()`
 Resets the sequence and removes all promise handlers. Be aware that the changes made by the previous sequence calls naturally can't be reverted by this.

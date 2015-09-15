@@ -84,8 +84,8 @@ $.fn.sequence = function( callback, interval, instantly ) {
 		};
 
 
-		// stop the sequence and 
-		obj.clear = function() {
+		// stop the sequence and clear the queue
+		obj.cancel = function() {
 			if ( done ) return;
 
 			obj.hold();
