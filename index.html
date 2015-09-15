@@ -123,8 +123,7 @@
 			demoConsole.add("seq1.runAll();");
 		});
 		btn('Reset', function () {
-			seq1.reset();
-			seq1release.removeClass('off');
+			resetSeq(seq1, seq1release);
 			demoConsole.add("seq1.reset();");
 		});
 
@@ -155,8 +154,7 @@
 			demoConsole.add("seq2.runAll();");
 		});
 		btn('Reset', function () {
-			seq2.reset();
-			seq2release.removeClass('off');
+			resetSeq(seq2, seq2release);
 			demoConsole.add("seq2.reset();");
 		});
 	}
