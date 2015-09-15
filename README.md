@@ -42,10 +42,10 @@ The `when` parameter can either be
 
 #### `ctrl.runAll()`
 Runs all remaining calls immediately.
-The promise will be resolved.
+The `ctrl.promise` will be resolved.
 
 #### `ctrl.cancel()`
-Puts the execution on hold and clears the sequence queue. The promise will be rejected.
+Puts the execution on hold and clears the sequence queue. The `ctrl.promise` will be rejected.
 
 #### `ctrl.reset()`
 Resets the sequence and removes all promise handlers. Be aware that the changes made by the previous sequence calls naturally can't be reverted by this.
