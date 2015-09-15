@@ -215,12 +215,10 @@
 		resetSeq(seq2, seq2release);
 
 		demoConsole.add('// Appended 50 &lt;div class="box"&gt; containers');
-		demoConsole.add("var seq1 = $( \".box\" )\n\
-.sequence( function() {\n\
+		demoConsole.add("var seq1 = $( \".box\" ).sequence( function() {\n\
     $( this ).css( \"background-color\", \"#ccc\" );\n\
 }, 100, false );");
-		demoConsole.add("var seq2 = $( \".box\" )\n\
-.sequence( function() {\n\
+		demoConsole.add("var seq2 = $( \".box\" ).sequence( function() {\n\
     $( this ).css( \"background-color\", \"#ccc\" );\n\
 }, 100, false );");
 	});
