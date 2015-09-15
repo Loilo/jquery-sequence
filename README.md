@@ -3,7 +3,7 @@ Runs a callback on each element of a jQuery collection with a timer in between
 
 Use it like this:
 
-```
+```javascript
 $( ".selector" ).sequence( callback, 500 );
 ```
 
