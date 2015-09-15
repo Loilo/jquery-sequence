@@ -30,22 +30,22 @@ It contains a `$.Deferred()` promise as the `ctrl.promise` property, so you can 
 
 Additionally, there are the following methods appended:
 
-`ctrl.hold()`
+#### `ctrl.hold()`
 Pauses the execution of the sequence instantly.
 
-`ctrl.release( [ when = "now" ] )`
+#### `ctrl.release( [ when = "now" ] )`
 Unpauses the execution of the sequence.
 The `when` parameter can either be
 - `"now"` to execute the next call on the sequence immediately (default)
 - `"delayed"` to wait a full turn and then run the callback or
 - `"remaining"` to resume exactly at the point where the execution was put on hold.
 
-`ctrl.runAll()`
+#### `ctrl.runAll()`
 Runs all remaining calls immediately.
 The promise will be resolved.
 
-`ctrl.cancel()`
+#### `ctrl.cancel()`
 Puts the execution on hold and clears the sequence queue. The promise will be rejected.
 
-`ctrl.reset()`
+#### `ctrl.reset()`
 Resets the sequence and removes all promise handlers. Be aware that the changes made by the previous sequence calls naturally can't be reverted by this.
